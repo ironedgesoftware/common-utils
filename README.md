@@ -8,7 +8,7 @@ Common utilities, simple to integrate in any project.
 This trait gives you a powerful API to access and manipulate data in an array. It has
 simple methods to access / set / check of presence of elements at any depth in an array.
 
-**NOTE**: This trait uses [OptionsTrait](#OptionsTrait).
+**NOTE**: This trait uses [OptionsTrait](#optionstrait).
 
 Usage:
 
