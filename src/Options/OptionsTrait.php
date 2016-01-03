@@ -99,8 +99,5 @@ trait OptionsTrait
      *
      * @return array
      */
-    public function getDefaultOptions(): array
-    {
-        return [];
-    }
+    abstract public function getDefaultOptions(): array;
 }

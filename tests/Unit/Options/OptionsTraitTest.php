@@ -63,6 +63,13 @@ class OptionsTraitTest extends AbstractTestCase
     {
         return new class implements OptionsInterface {
             use OptionsTrait;
+
+            public function getDefaultOptions(): array
+            {
+                return [];
+            }
+
+
         };
     }
 }
