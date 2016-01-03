@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the common-utils package.
  *
@@ -9,15 +8,13 @@
  * file that was distributed with this source code.
  */
 
-$autoloaders = array(
-    __DIR__.'/../../../autoload.php',
-    __DIR__.'/../vendor/autoload.php'
-);
+namespace IronEdge\Component\CommonUtils\Test\Unit;
 
-foreach ($autoloaders as $autoloader) {
-    if (is_file($autoloader)) {
-        require_once $autoloader;
 
-        break;
-    }
+/**
+ * @author Gustavo Falco <comfortablynumb84@gmail.com>
+ */
+abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
+{
+
 }
