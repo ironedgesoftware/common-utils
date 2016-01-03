@@ -1,5 +1,7 @@
 # common-utils
 
+[![Build Status](https://travis-ci.org/ironedgesoftware/common-utils.svg?branch=master)](https://travis-ci.org/ironedgesoftware/common-utils)
+
 Common utilities, simple to integrate in any project.
 
 
