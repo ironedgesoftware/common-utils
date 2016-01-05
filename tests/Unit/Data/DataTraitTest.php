@@ -10,6 +10,7 @@
 
 namespace IronEdge\Component\CommonUtils\Test\Unit\Data;
 
+use IronEdge\Component\CommonUtils\Data\Data;
 use IronEdge\Component\CommonUtils\Data\DataInterface;
 use IronEdge\Component\CommonUtils\Data\DataTrait;
 use IronEdge\Component\CommonUtils\Test\Unit\AbstractTestCase;
@@ -162,20 +163,7 @@ class DataTraitTest extends AbstractTestCase
      */
     protected function createInstance(array $data = [], array $options = [])
     {
-        $instance = new class implements DataInterface {
-            use DataTrait;
-
-
-            public function getDefaultOptions(): array
-            {
-                return [];
-            }
-
-
-        };
-
-        $instance->setOptions($options);
-        $instance->setData($data);
+        $instance = new Data($data, $options);
 
         return $instance;
     }
