@@ -126,9 +126,17 @@ We also include a class that already uses the [DataTrait](#datatrait).
 
 require_once('/path/to/autoload.php');
 
-$myData = new Data();
+use IronEdge\Component\CommonUtils\Data\Data;
 
+$myData = new Data(
+    [
+        'myParameter'   => 'myValue'
+    ]
+);
 
+// Should return 'myValue'.
+
+$myData->get('myParameter');
 ```
 
 ## OptionsTrait
