@@ -4,6 +4,13 @@
 
 Common utilities, simple to integrate in any project.
 
+## Index
+
+* [DataTrait](#datatrait): A Trait to create your own configuration classes.
+* [Data](#data): A class using [DataTrait](#datatrait) so you can start using it right from scratch.
+* [OptionsTrait](#optionstrait): A Trait to add a simple options API to your classes.
+* [Examples](#examples): A list of example PHP files that we provide so you can see how to use the features of this component.
+
 
 ## DataTrait
 
@@ -17,9 +24,9 @@ Usage:
 ``` php
 <?php
 
-namespace Your\Namespace;
+require_once('/path/to/autoload.php');
 
-use IronEdge\Component\CommonUtils\Options\DataTrait;
+use IronEdge\Component\CommonUtils\Data\DataTrait;
 
 class YourClass
 {
@@ -74,11 +81,11 @@ $yourClass->get('iDontExist', 'defaultValue');
 
 // Check if an attribute exist. Result: true
 
-$yourClass->has('user.group.primary');
+$yourClass->has('user.groups.primary');
 
 // This time, it returns: false
 
-$yourClass->has('user.group.admin');
+$yourClass->has('user.groups.admin');
 
 // You can use template variables that will be replaced
 // when you set the data.
@@ -94,6 +101,9 @@ $yourClass->setOptions(
         ]
     ]
 );
+
+// We need to set the data again so the template variables get replaced.
+
 $yourClass->setData($originalData);
 
 // Now it returns: 'admin'
@@ -107,7 +117,19 @@ $yourClass->get('defaultUser');
 $yourClass->get('allowedIps|127.0.0.1|grants', null, ['separator' => '|']);
 ```
 
+## Data
 
+We also include a class that already uses the [DataTrait](#datatrait).
+
+``` php
+<?php
+
+require_once('/path/to/autoload.php');
+
+$myData = new Data();
+
+
+```
 
 ## OptionsTrait
 
@@ -118,7 +140,7 @@ Usage:
 ``` php
 <?php
 
-namespace Your\Namespace;
+require_once('/path/to/autoload.php');
 
 use IronEdge\Component\CommonUtils\Options\OptionsTrait;
 
@@ -166,4 +188,17 @@ $yourClass->getOption('newOption');
 $yourClas->getOptions();
 ```
 
+## Example Files
 
+With this component we provide a set of simple example PHP files implementing the
+features of this component. You can just go to the examples directories and execute them:
+
+``` bash
+cd resources/examples;
+
+# Replace here "example-file.php" with the example file name you want to execute.
+
+php example-file.php;
+```
+
+* **resources/examples/data.php**: Shows the usage of the [Data class](#data).
