@@ -9,7 +9,7 @@ Common utilities, simple to integrate in any project.
 * [DataTrait](#datatrait): A Trait to create your own configuration classes.
 * [Data](#data): A class using [DataTrait](#datatrait) so you can start using it right from scratch.
 * [OptionsTrait](#optionstrait): A Trait to add a simple options API to your classes.
-* [Examples](#examples): A list of example PHP files that we provide so you can see how to use the features of this component.
+* [Example Files](#example-files): A list of example PHP files that we provide so you can see how to use the features of this component.
 
 
 ## DataTrait
