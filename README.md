@@ -313,3 +313,4 @@ php example-file.php;
 
 * **resources/examples/data.php**: Shows the usage of the [Data class](#data).
 * **resources/examples/options.php**: Shows the usage of the [OptionsTrait](#optionstrait).
+* **resources/examples/system-service.php**: Shows the usage of the [System Service](#system-service).
