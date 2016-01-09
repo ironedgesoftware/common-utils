@@ -1,4 +1,4 @@
-# common-utils
+# Common Utilities
 
 [![Build Status](https://travis-ci.org/ironedgesoftware/common-utils.svg?branch=master)](https://travis-ci.org/ironedgesoftware/common-utils)
 
@@ -9,6 +9,7 @@ Common utilities, simple to integrate in any project.
 * [DataTrait](#datatrait): A Trait to create your own configuration classes.
 * [Data](#data): A class using [DataTrait](#datatrait) so you can start using it right from scratch.
 * [OptionsTrait](#optionstrait): A Trait to add a simple options API to your classes.
+* [System Service](#system-service): This service provides a simple API to interact with your system, with methods to execute CLI commands, create directories, etc.
 * [Example Files](#example-files): A list of example PHP files that we provide so you can see how to use the features of this component.
 
 
@@ -195,6 +196,60 @@ $yourClass->getOption('newOption');
 
 $yourClas->getOptions();
 ```
+
+## System Service
+
+This service provides an API to common system operations. It abstracts away the usage of
+PHP functions to allow you to use them in an OOP way, and adds a lot of useful additional tools.
+
+**Command Execution**:
+
+``` php
+<?php
+
+use \IronEdge\Component\CommonUtils\System\SystemService;
+
+$systemService = new SystemService();
+
+// Simple usage. Returns: ['Hello world!']
+$output = $systemService->executeCommand('echo "Hello world!"');
+
+// Escape arguments: Returns: ['Hello world!']
+$output = $systemService->executeCommand('echo', ['Hello', 'world!']);
+
+// Returns last executed command, including escaped arguments
+$systemService->getLastExecutedCommand();
+
+// Returns last executed command's arguments
+$systemService->getLastExecutedCommandArguments();
+
+// Returns last executed command's options
+$systemService->getLastExecutedCommandOptions();
+
+// Returns last executed command's exit code
+$systemService->getLastExecutedCommandExitCode();
+
+// Returns last executed command's output
+$systemService->getLastExecutedCommandOutput();
+
+// Exception when a command fails
+try {
+    $systemService->executeCommand('invalid command!');
+} catch (\IronEdge\Component\CommonUtils\Exception\CommandException $e) {
+    // Returns exit code
+    $e->getCode();
+
+    // Returns last executed command, including escaped arguments
+    $e->getCmd();
+
+    // Returns the array of arguments
+    $e->getArguments();
+
+    // Returns command output
+    $e->getOutput();
+}
+```
+
 
 ## Example Files
 

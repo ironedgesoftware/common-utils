@@ -8,11 +8,11 @@
  * file that was distributed with this source code.
  */
 
-namespace IronEdge\Component\CommonUtils\Test\Unit\System;
+namespace IronEdge\Component\CommonUtils\Test\Acceptance\System;
 
 use IronEdge\Component\CommonUtils\Exception\CommandException;
 use IronEdge\Component\CommonUtils\System\SystemService;
-use IronEdge\Component\Graphs\Test\Unit\AbstractTestCase;
+use IronEdge\Component\CommonUtils\Test\Acceptance\AbstractTestCase;
 
 
 /**
@@ -25,20 +25,22 @@ class SystemServiceTest extends AbstractTestCase
         $cmd = 'echoasdasdasdas';
         $arguments = ['Hola', 'Mundo!'];
         $options = [
-            'overrideExitCode'  => 111
+            'overrideExitCode'  => 111,
+            'postCommand'       => ' 2> /dev/null'
         ];
         $expectedOptions = [
             'overrideExitCode'  => 111,
             'exceptionMessage'  => 'There was an error while executing the command.',
             'returnString'      => false,
-            'implodeSeparator'  => PHP_EOL
+            'implodeSeparator'  => PHP_EOL,
+            'postCommand'       => ' 2> /dev/null'
         ];
         $systemService = $this->createInstance();
 
         try {
             $systemService->executeCommand($cmd, $arguments, $options);
         } catch (CommandException $e) {
-            $expectedCommand = $cmd.' \'Hola\' \'Mundo!\'';
+            $expectedCommand = $cmd.' \'Hola\' \'Mundo!\' 2> /dev/null';
 
             $this->assertEquals($expectedOptions['exceptionMessage'], $e->getMessage());
             $this->assertEquals($expectedOptions['overrideExitCode'], $e->getCode());
@@ -49,7 +51,7 @@ class SystemServiceTest extends AbstractTestCase
             $this->assertEquals($expectedCommand, $systemService->getLastExecutedCommand());
             $this->assertEquals($arguments, $systemService->getLastExecutedCommandArguments());
             $this->assertEquals($expectedOptions, $systemService->getLastExecutedCommandOptions());
-            $this->assertEquals($expectedOptions['overrideExitCode'], $systemService->getLastExecutedCommandStatus());
+            $this->assertEquals($expectedOptions['overrideExitCode'], $systemService->getLastExecutedCommandExitCode());
 
             return;
         }
@@ -66,7 +68,8 @@ class SystemServiceTest extends AbstractTestCase
             'overrideExitCode'  => null,
             'exceptionMessage'  => 'There was an error while executing the command.',
             'returnString'      => false,
-            'implodeSeparator'  => PHP_EOL
+            'implodeSeparator'  => PHP_EOL,
+            'postCommand'       => ''
         ];
         $expectedOutput = ['Hola Mundo!'];
         $systemService = $this->createInstance();
@@ -77,6 +80,7 @@ class SystemServiceTest extends AbstractTestCase
         $this->assertEquals('echo \'Hola\' \'Mundo!\'', $systemService->getLastExecutedCommand());
         $this->assertEquals($arguments, $systemService->getLastExecutedCommandArguments());
         $this->assertEquals($expectedOptions, $systemService->getLastExecutedCommandOptions());
+        $this->assertEquals(0, $systemService->getLastExecutedCommandExitCode());
 
         $expectedOutput = 'Hola Mundo!';
 
@@ -89,6 +93,7 @@ class SystemServiceTest extends AbstractTestCase
         $this->assertEquals('echo \'Hola\' \'Mundo!\'', $systemService->getLastExecutedCommand());
         $this->assertEquals($arguments, $systemService->getLastExecutedCommandArguments());
         $this->assertEquals($expectedOptions, $systemService->getLastExecutedCommandOptions());
+        $this->assertEquals(0, $systemService->getLastExecutedCommandExitCode());
     }
 
 

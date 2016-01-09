@@ -49,11 +49,11 @@ class SystemService
     private $_lastExecutedCommandOutput;
 
     /**
-     * Field _lastExecutedCommandStatus.
+     * Field _lastExecutedCommandExitCode.
      *
      * @var int|null
      */
-    private $_lastExecutedCommandStatus;
+    private $_lastExecutedCommandExitCode;
 
 
     /**
@@ -97,13 +97,13 @@ class SystemService
     }
 
     /**
-     * Returns the value of field _lastExecutedCommandStatus.
+     * Returns the last command's exit code.
      *
      * @return int|null
      */
-    public function getLastExecutedCommandStatus()
+    public function getLastExecutedCommandExitCode()
     {
-        return $this->_lastExecutedCommandStatus;
+        return $this->_lastExecutedCommandExitCode;
     }
 
     /**
@@ -124,7 +124,8 @@ class SystemService
                 'overrideExitCode'  => null,
                 'exceptionMessage'  => 'There was an error while executing the command.',
                 'returnString'      => false,
-                'implodeSeparator'  => PHP_EOL
+                'implodeSeparator'  => PHP_EOL,
+                'postCommand'       => ''
             ],
             $options
         );
@@ -134,6 +135,8 @@ class SystemService
                 $cmd .= ' '.escapeshellarg($arg);
             }
         }
+
+        $cmd .= $options['postCommand'];
 
         exec($cmd, $output, $status);
 
@@ -145,7 +148,7 @@ class SystemService
         $this->_lastExecutedCommandArguments = $arguments;
         $this->_lastExecutedCommandOptions = $options;
         $this->_lastExecutedCommandOutput = $output;
-        $this->_lastExecutedCommandStatus = $status;
+        $this->_lastExecutedCommandExitCode = $status;
 
         if ($status) {
             throw CommandException::create(
