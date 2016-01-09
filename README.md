@@ -186,6 +186,9 @@ $yourClass->setOptions(['newOption' => 'newValue']);
 // true - 'enabled' is still present as it's a default option.
 
 $yourClass->hasOption('enabled');
+
+// true
+
 $yourClass->getOption('enabled');
 
 // 'newValue'
@@ -248,6 +251,50 @@ try {
     // Returns command output
     $e->getOutput();
 }
+
+// You can pass several options to the "executeCommand" method:
+
+// Option "returnString" returns a string instead of an array. It
+// uses option "implodeSeparator" as the separator used by "implode"
+// function. By default, we use PHP_EOL.
+//
+// Result: "a\nb"
+
+$output = $systemService->executeCommand(
+    'echo a && echo b',
+    [],
+    [
+        'returnString'      => true
+    ]
+);
+
+// Same example, by with a different implode separator.
+//
+// Result: a,b
+
+$output = $systemService->executeCommand(
+    'echo a && echo b',
+    [],
+    [
+        'returnString'      => true,
+        'implodeSeparator'  => ','
+    ]
+);
+
+// In the case you pass arguments as the second argument of this method,
+// you can use option "postCommand" to set, for example, a redirection
+
+$output = $systemService->executeCommand(
+    'echo a',
+    [],
+    [
+        'postCommand' => '>> /tmp/my_file'
+    ]
+);
+
+// Returns: "echo a >> /tmp/my_file"
+
+$systemService->getLastExecutedCommand();
 ```
 
 
