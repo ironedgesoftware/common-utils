@@ -267,16 +267,6 @@ class SystemServiceTest extends AbstractTestCase
         $systemService->rm($file, ['context' => 'InvalidContext']);
     }
 
-    public function test_scandir_ifFirstArgumentIsNotADirThenThrowException()
-    {
-        $this->setExpectedExceptionRegExp(
-            get_class(new NotADirectoryException()),
-            '#Path \"abc\" is not a directory\.#'
-        );
-
-        $this->createInstance()->scandir('abc');
-    }
-
     public function test_scandir_ifASymlinkIsReceivedButItsBrokenThenThrowException()
     {
         $testSymlink = $this->getTmpDir().'/a';
@@ -284,8 +274,8 @@ class SystemServiceTest extends AbstractTestCase
         @symlink($badTarget, $testSymlink);
 
         $this->setExpectedExceptionRegExp(
-            get_class(new NotADirectoryException()),
-            '#Path \"'.preg_quote($badTarget).'\" is not a directory\.#'
+            get_class(new IOException()),
+            '#Couldn\\\'t scan directory "'.$badTarget.'"\. Last PHP Error#'
         );
 
         try {
@@ -367,6 +357,24 @@ class SystemServiceTest extends AbstractTestCase
         );
 
         $this->createInstance()->scandir($this->getTmpDir(), ['context' => 'invalidContext']);
+    }
+
+    public function test_mkdir_throwExceptionIfFunctionReturnFalse()
+    {
+        $this->setExpectedExceptionRegExp(
+            get_class(new IOException())
+        );
+
+        $this->createInstance()->mkdir('http://127.0.0.1');
+    }
+
+    public function test_rmdir_throwExceptionIfFunctionReturnFalse()
+    {
+        $this->setExpectedExceptionRegExp(
+            get_class(new IOException())
+        );
+
+        $this->createInstance()->rm('http://127.0.0.1', ['skipIfAlreadyRemoved' => false]);
     }
 
     // Helper methods

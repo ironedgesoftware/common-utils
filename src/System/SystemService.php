@@ -227,14 +227,15 @@ class SystemService
     {
         $options = array_replace(
             [
-                'force'         => false,
-                'recursive'     => false,
-                'context'       => null
+                'force'                 => false,
+                'recursive'             => false,
+                'context'               => null,
+                'skipIfAlreadyRemoved'  => true
             ],
             $options
         );
 
-        if (!file_exists($fileOrDirectory)) {
+        if (!file_exists($fileOrDirectory) && $options['skipIfAlreadyRemoved']) {
             return $this;
         }
 
@@ -323,12 +324,6 @@ class SystemService
 
         if (!$options['skipSymlinks'] && is_link($dir)) {
             $dir = @readlink($dir);
-        }
-
-        if (!is_dir($dir)) {
-            throw NotADirectoryException::create(
-                'Path "'.$dir.'" is not a directory.'
-            );
         }
 
         $args = [
