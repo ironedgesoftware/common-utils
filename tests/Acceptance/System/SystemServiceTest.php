@@ -360,6 +360,15 @@ class SystemServiceTest extends AbstractTestCase
         $this->assertTrue(in_array('test2', $result));
     }
 
+    public function test_scandir_ifContextIsInvalidThenThrowException()
+    {
+        $this->setExpectedExceptionRegExp(
+            get_class(new \TypeError())
+        );
+
+        $this->createInstance()->scandir($this->getTmpDir(), ['context' => 'invalidContext']);
+    }
+
     // Helper methods
 
     /**
