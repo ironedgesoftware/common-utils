@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the frenzy-framework package.
+ * This file is part of the common-utils package.
  *
  * (c) Gustavo Falco <comfortablynumb84@gmail.com>
  *

@@ -16,5 +16,51 @@ namespace IronEdge\Component\CommonUtils\Test\Acceptance;
  */
 abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * Returns the path to the "tmp" dir used for testing purposes.
+     *
+     * @return string
+     */
+    protected function getTmpDir()
+    {
+        $dir = realpath(__DIR__).'/../tmp';
 
+        if (!$dir) {
+            throw new \RuntimeException('Couldn\'t determine path to "tmp" dir for testing!');
+        }
+
+        return $dir;
+    }
+
+    /**
+     * Cleans up temp files.
+     *
+     * @return void
+     */
+    protected function cleanUp()
+    {
+        $this->rm($this->getTmpDir());
+    }
+
+    /**
+     * Deletes everything found inside a directory.
+     *
+     * @param string $dir - Directory.
+     *
+     * @return void
+     */
+    protected function rm($dir)
+    {
+        foreach (glob($dir.'/*') as $fileOrDir) {
+            if (is_link($fileOrDir) || is_file($fileOrDir)) {
+                unlink($fileOrDir);
+
+                continue;
+            }
+
+            $this->rm($fileOrDir);
+
+            rmdir($fileOrDir);
+        }
+    }
 }

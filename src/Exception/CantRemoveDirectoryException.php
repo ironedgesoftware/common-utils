@@ -16,7 +16,17 @@ namespace IronEdge\Component\CommonUtils\Exception;
 /**
  * @author Gustavo Falco <comfortablynumb84@gmail.com>
  */
-class BaseException extends \Exception
+class CantRemoveDirectoryException extends BaseException
 {
-
+    /**
+     * Creates an instance of this exception.
+     *
+     * @param string $msg - Exception message.
+     *
+     * @return IOException
+     */
+    public static function create(string $msg)
+    {
+        return new self($msg);
+    }
 }
