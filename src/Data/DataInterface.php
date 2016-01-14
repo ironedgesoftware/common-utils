@@ -19,6 +19,22 @@ namespace IronEdge\Component\CommonUtils\Data;
 interface DataInterface
 {
     /**
+     * Method setReadOnly.
+     *
+     * @param bool $bool - Read Only?
+     *
+     * @return self
+     */
+    public function setReadOnly(bool $bool);
+
+    /**
+     * Is this instance read only?
+     *
+     * @return bool
+     */
+    public function isReadOnly(): bool;
+
+    /**
      * Calls array_replace_recursive using the data existent on $index and data on $value.
      *
      * @param string $index   - Index.
@@ -26,7 +42,7 @@ interface DataInterface
      * @param mixed  $default - Default value.
      * @param array  $options - Options.
      *
-     * @return $this
+     * @return self
      */
     public function replaceRecursive(string $index, array $value, $default = null, array $options = []);
 
@@ -38,7 +54,7 @@ interface DataInterface
      * @param mixed  $default - Default value.
      * @param array  $options - Options.
      *
-     * @return $this
+     * @return self
      */
     public function mergeRecursive(string $index, array $value, $default = null, array $options = []);
 
@@ -50,7 +66,7 @@ interface DataInterface
      * @param mixed  $default - Default value.
      * @param array  $options - Options.
      *
-     * @return $this
+     * @return self
      */
     public function replace(string $index, array $value, $default = null, array $options = []);
 
@@ -62,7 +78,7 @@ interface DataInterface
      * @param mixed  $default - Default value.
      * @param array  $options - Options.
      *
-     * @return $this
+     * @return self
      */
     public function merge(string $index, array $value, $default = null, array $options = []);
 
@@ -76,7 +92,7 @@ interface DataInterface
      * @param mixed  $default  - Default value.
      * @param array  $options  - Options.
      *
-     * @return $this
+     * @return self
      */
     public function callFunction(string $function, string $index, array $value, $default = null, array $options = []);
 
@@ -115,7 +131,7 @@ interface DataInterface
      * @param mixed  $value   - Parameter value.
      * @param array  $options - Options.
      *
-     * @return $this
+     * @return self
      */
     public function set(string $index, $value, array $options = []);
 
@@ -132,7 +148,7 @@ interface DataInterface
      * @param array $data                     - data.
      * @param bool  $replaceTemplateVariables - Replace Template Variables?
      *
-     * @return $this
+     * @return self
      */
     public function setData(array $data, $replaceTemplateVariables = true);
 }

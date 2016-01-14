@@ -13,6 +13,7 @@ namespace IronEdge\Component\CommonUtils\Test\Unit\Data;
 use IronEdge\Component\CommonUtils\Data\Data;
 use IronEdge\Component\CommonUtils\Data\DataInterface;
 use IronEdge\Component\CommonUtils\Data\DataTrait;
+use IronEdge\Component\CommonUtils\Exception\DataIsReadOnlyException;
 use IronEdge\Component\CommonUtils\Test\Unit\AbstractTestCase;
 
 
@@ -21,6 +22,22 @@ use IronEdge\Component\CommonUtils\Test\Unit\AbstractTestCase;
  */
 class DataTraitTest extends AbstractTestCase
 {
+    /**
+     * @dataProvider readOnlyDataProvider
+     */
+    public function test_readOnly_ifInstanceIsReadOnlyThenThrowException(\Closure $setDataClosure)
+    {
+        $this->setExpectedExceptionRegExp(
+            get_class(new DataIsReadOnlyException())
+        );
+
+        $config = $this->createInstance([]);
+
+        $config->setReadOnly(true);
+
+        $setDataClosure($config);
+    }
+
     /**
      * @expectedException \RuntimeException
      */
@@ -152,6 +169,48 @@ class DataTraitTest extends AbstractTestCase
             ],
             [
                 'array_merge_recursive', 'mergeRecursive'
+            ]
+        ];
+    }
+
+    public function readOnlyDataProvider()
+    {
+        return [
+            [
+                function(Data $config) {
+                    $config->set('a', 'b');
+                }
+            ],
+            [
+                function(Data $config) {
+                    $config->merge('test', ['a' => 'b']);
+                }
+            ],
+            [
+                function(Data $config) {
+                    $config->replace('test', ['a' => 'b']);
+                }
+            ],
+            [
+                function(Data $config) {
+                    $config->mergeRecursive('test', ['a' => 'b']);
+                }
+            ],
+            [
+                function(Data $config) {
+                    $config->replaceRecursive('test', ['a' => 'b']);
+                }
+            ],
+            [
+                function(Data $config) {
+                    $config->setData(['b' => 'c']);
+                }
+            ],
+            [
+                function(Data $config) {
+                    $config->set('test', []);
+                    $config->callFunction('array_merge', 'test', ['b' => 'c']);
+                }
             ]
         ];
     }

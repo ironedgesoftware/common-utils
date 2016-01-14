@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace IronEdge\Component\CommonUtils\Data;
 
+use IronEdge\Component\CommonUtils\Exception\DataIsReadOnlyException;
 use IronEdge\Component\CommonUtils\Options\OptionsTrait;
 
 
@@ -30,7 +31,37 @@ trait DataTrait
      */
     private $_data = [];
 
+    /**
+     * If this is true, then data can't be manipulated.
+     *
+     * @var bool
+     */
+    private $_readOnly = false;
 
+
+    /**
+     * Sets this instance as read only or not.
+     *
+     * @param bool $bool - True or false.
+     *
+     * @return self
+     */
+    public function setReadOnly(bool $bool)
+    {
+        $this->_readOnly = $bool;
+
+        return $this;
+    }
+
+    /**
+     * Is this instance read only?
+     *
+     * @return bool
+     */
+    public function isReadOnly(): bool
+    {
+        return $this->_readOnly;
+    }
 
     /**
      * Setter method for field data.
@@ -42,6 +73,8 @@ trait DataTrait
      */
     public function setData(array $data, $replaceTemplateVariables = true)
     {
+        $this->assertDataIsWritable();
+
         if ($replaceTemplateVariables) {
             $data = $this->replaceTemplateVariables($data);
         }
@@ -70,6 +103,8 @@ trait DataTrait
      */
     public function replaceTemplateVariables($data)
     {
+        $this->assertDataIsWritable();
+
         if ($templateVariables = $this->getOption('templateVariables', [])) {
             $templateVariableKeys = array_keys($templateVariables);
 
@@ -167,6 +202,8 @@ trait DataTrait
      */
     public function set(string $index, $value, array $options = [])
     {
+        $this->assertDataIsWritable();
+
         $separator = isset($options['separator']) ?
             $options['separator'] :
             $this->getOption('separator', '.');
@@ -203,6 +240,8 @@ trait DataTrait
      */
     public function replaceRecursive(string $index, array $value, $default = null, array $options = [])
     {
+        $this->assertDataIsWritable();
+
         return $this->callFunction('array_replace_recursive', $index, $value, $default, $options);
     }
 
@@ -218,6 +257,8 @@ trait DataTrait
      */
     public function mergeRecursive(string $index, array $value, $default = null, array $options = [])
     {
+        $this->assertDataIsWritable();
+
         return $this->callFunction('array_merge_recursive', $index, $value, $default, $options);
     }
 
@@ -233,6 +274,8 @@ trait DataTrait
      */
     public function replace(string $index, array $value, $default = null, array $options = [])
     {
+        $this->assertDataIsWritable();
+
         return $this->callFunction('array_replace', $index, $value, $default, $options);
     }
 
@@ -248,6 +291,8 @@ trait DataTrait
      */
     public function merge(string $index, array $value, $default = null, array $options = [])
     {
+        $this->assertDataIsWritable();
+
         return $this->callFunction('array_merge', $index, $value, $default, $options);
     }
 
@@ -281,5 +326,19 @@ trait DataTrait
         $this->set($index, $value, $options);
 
         return $this;
+    }
+
+    /**
+     * Throws an exception if this instance is read only.
+     *
+     * @throws DataIsReadOnlyException
+     *
+     * @return void
+     */
+    protected function assertDataIsWritable()
+    {
+        if ($this->isReadOnly()) {
+            throw DataIsReadOnlyException::create();
+        }
     }
 }

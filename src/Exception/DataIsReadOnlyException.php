@@ -16,17 +16,15 @@ namespace IronEdge\Component\CommonUtils\Exception;
 /**
  * @author Gustavo Falco <comfortablynumb84@gmail.com>
  */
-class CantRemoveDirectoryException extends BaseException
+class DataIsReadOnlyException extends BaseException
 {
     /**
      * Creates an instance of this exception.
      *
-     * @param string $msg - Exception message.
-     *
      * @return DataIsReadOnlyException
      */
-    public static function create(string $msg)
+    public static function create()
     {
-        return new self($msg);
+        return new self('Can\'t modify data of this instance because it\'s set as read only.');
     }
 }
