@@ -136,6 +136,20 @@ interface DataInterface
     public function set(string $index, $value, array $options = []);
 
     /**
+     * Removes an element from the configuration. It allows to remove elements recursively. For example,
+     * if you remove the key "user.email", the result is similar to the following:
+     *
+     * unset($data['user']['email']);
+     *
+     * @param string $index   - Parameter index.
+     * @param mixed  $value   - Parameter value.
+     * @param array  $options - Options.
+     *
+     * @return self
+     */
+    public function remove(string $index, array $options = []);
+
+    /**
      * Getter method for field _data.
      *
      * @return array

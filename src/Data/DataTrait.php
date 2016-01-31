@@ -229,6 +229,47 @@ trait DataTrait
     }
 
     /**
+     * Removes an element from the configuration. It allows to remove elements recursively. For example,
+     * if you remove the key "user.email", the result is similar to the following:
+     *
+     * unset($data['user']['email']);
+     *
+     * @param string $index   - Parameter index.
+     * @param array  $options - Options.
+     *
+     * @return self
+     */
+    public function remove(string $index, array $options = [])
+    {
+        $this->assertDataIsWritable();
+
+        $separator = isset($options['separator']) ?
+            $options['separator'] :
+            $this->getOption('separator', '.');
+        $root = &$this->_data;
+        $keys = explode($separator, $index);
+        $targetKey = count($keys) - 1;
+
+        if (!$targetKey) {
+            unset($root[$index]);
+
+            return $this;
+        }
+
+        foreach ($keys as $i => $key) {
+            if ($i === $targetKey) {
+                unset($root[$key]);
+
+                break;
+            }
+
+            $root = &$root[$key];
+        }
+
+        return $this;
+    }
+
+    /**
      * Calls array_replace_recursive using the data existent on $index and data on $value.
      *
      * @param string $index   - Index.

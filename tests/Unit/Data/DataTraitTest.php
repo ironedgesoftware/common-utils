@@ -23,6 +23,18 @@ use IronEdge\Component\CommonUtils\Test\Unit\AbstractTestCase;
 class DataTraitTest extends AbstractTestCase
 {
     /**
+     * @dataProvider removeDataProvider
+     */
+    public function test_remove_shouldRemoveElementFromDataArray(array $data, string $removeIndex)
+    {
+        $config = $this->createInstance($data);
+
+        $config->remove($removeIndex);
+
+        $this->assertFalse($config->has($removeIndex));
+    }
+
+    /**
      * @dataProvider readOnlyDataProvider
      */
     public function test_readOnly_ifInstanceIsReadOnlyThenThrowException(\Closure $setDataClosure)
@@ -169,6 +181,48 @@ class DataTraitTest extends AbstractTestCase
             ],
             [
                 'array_merge_recursive', 'mergeRecursive'
+            ]
+        ];
+    }
+
+    public function removeDataProvider()
+    {
+        return [
+            [
+                [
+                    'user'          => [
+                        'profiles'      => [
+                            'testProfile'   => [
+                                'admin'         => 1
+                            ]
+                        ]
+                    ]
+                ],
+                'user.profiles.testProfile.admin'
+            ],
+            [
+                [
+                    'user'          => [
+                        'profiles'      => [
+                            'testProfile'   => [
+                                'admin'         => 1
+                            ]
+                        ]
+                    ]
+                ],
+                'user.nonExistentKey'
+            ],
+            [
+                [
+                    'user'          => [
+                        'profiles'      => [
+                            'testProfile'   => [
+                                'admin'         => 1
+                            ]
+                        ]
+                    ]
+                ],
+                'user.profiles'
             ]
         ];
     }
