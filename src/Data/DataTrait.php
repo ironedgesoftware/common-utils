@@ -186,7 +186,7 @@ trait DataTrait
 
         $actualType = gettype($val);
         
-        if (!is_scalar($val) || !settype($val, $targetType)) {
+        if (!is_scalar($val) || !@settype($val, $targetType)) {
             throw InvalidCastException::create($actualType, $targetType);
         }
         
