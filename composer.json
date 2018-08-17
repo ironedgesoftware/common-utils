@@ -16,11 +16,10 @@
         "issues": "https://github.com/ironedgesoftware/common-utils/issues"
     },
     "require": {
-        "php":                          "^7.0"
+        "php":                          "^7.2"
     },
     "require-dev": {
-        "phpunit/phpunit":              "^4.5 || ^5.0.5",
-        "phpunit/phpunit-mock-objects": "2.3.0 || ^3.0"
+        "phpunit/phpunit":              "^7.3"
     },
     "autoload": {
         "psr-4": {
@@ -28,10 +27,5 @@
             "IronEdge\\Component\\CommonUtils\\Test\\": "tests"
         }
     },
-    "minimum-stability": "dev",
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0-dev"
-        }
-    }
+    "minimum-stability": "dev"
 }

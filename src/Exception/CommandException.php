@@ -54,9 +54,9 @@ class CommandException extends BaseException
      *
      * @param array $output - output.
      *
-     * @return CommandException
+     * @return self
      */
-    public function setOutput($output): CommandException
+    public function setOutput($output): self
     {
         $this->_output = $output;
 
@@ -78,9 +78,9 @@ class CommandException extends BaseException
      *
      * @param string $cmd - cmd.
      *
-     * @return CommandException
+     * @return self
      */
-    public function setCmd(string $cmd): CommandException
+    public function setCmd(string $cmd) : self
     {
         $this->_cmd = $cmd;
 
@@ -92,7 +92,7 @@ class CommandException extends BaseException
      *
      * @return array
      */
-    public function getArguments(): array
+    public function getArguments() : array
     {
         return $this->_arguments;
     }
@@ -102,9 +102,9 @@ class CommandException extends BaseException
      *
      * @param array $arguments - arguments.
      *
-     * @return CommandException
+     * @return self
      */
-    public function setArguments($arguments): CommandException
+    public function setArguments($arguments) : self
     {
         $this->_arguments = $arguments;
 
@@ -120,7 +120,7 @@ class CommandException extends BaseException
      * @param string $cmd       - Command executed.
      * @param array  $arguments - Command arguments.
      *
-     * @return CommandException
+     * @return self
      */
     public static function create(
         string $msg,
@@ -128,8 +128,7 @@ class CommandException extends BaseException
         array $output,
         string $cmd, array
         $arguments = []
-    ): CommandException
-    {
+    ) : self {
         $e = new self($msg, $exitCode);
 
         $e->setOutput($output)

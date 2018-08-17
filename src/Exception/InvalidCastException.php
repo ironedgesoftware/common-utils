@@ -16,15 +16,18 @@ namespace IronEdge\Component\CommonUtils\Exception;
 /**
  * @author Gustavo Falco <comfortablynumb84@gmail.com>
  */
-class DataIsReadOnlyException extends BaseException
+class InvalidCastException extends BaseException
 {
     /**
      * Creates an instance of this exception.
      *
+     * @param string $actualType - Actual type.
+     * @param string $targetType - Target type.
+     *
      * @return self
      */
-    public static function create() : self
+    public static function create(string $actualType, string $targetType) : self
     {
-        return new self('Can\'t modify data of this instance because it\'s set as read only.');
+        return new self('Cannot cast type "'.$actualType.'" to expected type "'.$targetType.'".');
     }
 }

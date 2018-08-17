@@ -23,9 +23,9 @@ class NotADirectoryException extends BaseException
      *
      * @param string $msg - Exception message.
      *
-     * @return IOException
+     * @return self
      */
-    public static function create(string $msg)
+    public static function create(string $msg) : self
     {
         return new self($msg);
     }

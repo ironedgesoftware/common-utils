@@ -14,6 +14,7 @@ use IronEdge\Component\CommonUtils\Data\Data;
 use IronEdge\Component\CommonUtils\Data\DataInterface;
 use IronEdge\Component\CommonUtils\Data\DataTrait;
 use IronEdge\Component\CommonUtils\Exception\DataIsReadOnlyException;
+use IronEdge\Component\CommonUtils\Exception\InvalidCastException;
 use IronEdge\Component\CommonUtils\Test\Unit\AbstractTestCase;
 
 
@@ -22,6 +23,78 @@ use IronEdge\Component\CommonUtils\Test\Unit\AbstractTestCase;
  */
 class DataTraitTest extends AbstractTestCase
 {
+    /**
+     * @dataProvider invalidCastDataProvider
+     */
+    public function test_getCastedValue_throwsInvalidCast(array $data, string $index, string $type) {
+        $config = $this->createInstance($data);
+        
+        $this->expectException(get_class(new InvalidCastException()));
+        
+        $config->getCastedValue($type, $index);
+    }
+    
+    /**
+     * @dataProvider getBooleanDataProvider
+     */
+    public function test_getBoolean_returnsCastedValue(
+        array $data,
+        string $index,
+        $expectedValue,
+        $default = null,
+        array $options = []
+    ) {
+        $config = $this->createInstance($data);
+        
+        $this->assertEquals($expectedValue, $config->getBoolean($index, $default, $options));
+    }
+    
+    /**
+     * @dataProvider getFloatDataProvider
+     */
+    public function test_getFloat_returnsCastedValue(
+        array $data,
+        string $index,
+        $expectedValue,
+        $default = null,
+        array $options = []
+    ) {
+        $config = $this->createInstance($data);
+        
+        $this->assertEquals($expectedValue, $config->getFloat($index, $default, $options));
+    }
+    
+    /**
+     * @dataProvider getIntDataProvider
+     */
+    public function test_getInt_returnsCastedValue(
+        array $data,
+        string $index,
+        $expectedValue,
+        $default = null,
+        array $options = []
+    ) {
+        $config = $this->createInstance($data);
+        
+        $this->assertEquals($expectedValue, $config->getInt($index, $default, $options));
+    }
+    
+    /**
+     * @dataProvider getCastedValueDataProvider
+     */
+    public function test_getCastedValue_returnsCastedValue(
+        array $data,
+        string $index,
+        string $expectedType,
+        $expectedValue,
+        $default = null,
+        array $options = []
+    ) {
+        $config = $this->createInstance($data);
+        
+        $this->assertEquals($expectedValue, $config->getCastedValue($expectedType, $index, $default, $options));
+    }
+    
     /**
      * @dataProvider removeDataProvider
      */
@@ -39,9 +112,7 @@ class DataTraitTest extends AbstractTestCase
      */
     public function test_readOnly_ifInstanceIsReadOnlyThenThrowException(\Closure $setDataClosure)
     {
-        $this->setExpectedExceptionRegExp(
-            get_class(new DataIsReadOnlyException())
-        );
+        $this->expectException(get_class(new DataIsReadOnlyException()));
 
         $config = $this->createInstance([]);
 
@@ -268,7 +339,193 @@ class DataTraitTest extends AbstractTestCase
             ]
         ];
     }
-
+    
+    public function getCastedValueDataProvider()
+    {
+        return [
+            [
+                ['myStringValue' => '11112222'],
+                'myStringValue',
+                'int',
+                11112222
+            ],
+            [
+                ['myStringValue' => 'asdasasd'],
+                'myStringValue',
+                'int',
+                '0'
+            ],
+            [
+                ['myIntValue' => 11233455],
+                'myIntValue',
+                'string',
+                '11233455'
+            ],
+            [
+                ['myIntValue' => 11233455],
+                'myIntValue',
+                'boolean',
+                true
+            ],
+            [
+                ['myIntValue' => 0],
+                'myIntValue',
+                'boolean',
+                false
+            ],
+            [
+                ['myStringValue' => '11233455123123122133131'],
+                'myStringValue',
+                'float',
+                11233455123123122133131
+            ],
+            [
+                ['otherKey' => '11233455123123122133131'],
+                'myStringValue',
+                'float',
+                null
+            ],
+            [
+                ['otherKey' => '11233455123123122133131'],
+                'myStringValue',
+                'float',
+                '1234',
+                '1234'
+            ],
+            [
+                ['otherKey' => ['anotherKey' => '1234']],
+                'otherKey|anotherKey',
+                'float',
+                1234,
+                null,
+                ['separator' => '|']
+            ]
+        ];
+    }
+    
+    public function getIntDataProvider()
+    {
+        return [
+            [
+                ['myStringValue' => '11112222'],
+                'myStringValue',
+                11112222
+            ],
+            [
+                ['myStringValue' => 'asdasasd'],
+                'myStringValue',
+                '0'
+            ],
+            [
+                ['otherKey' => '11233455123123122133131'],
+                'myStringValue',
+                null
+            ],
+            [
+                ['otherKey' => '11233455123123122133131'],
+                'myStringValue',
+                '1234',
+                '1234'
+            ],
+            [
+                ['otherKey' => ['anotherKey' => '1234']],
+                'otherKey|anotherKey',
+                1234,
+                null,
+                ['separator' => '|']
+            ]
+        ];
+    }
+    
+    public function getFloatDataProvider()
+    {
+        return [
+            [
+                ['myStringValue' => '11233455123123122133131'],
+                'myStringValue',
+                11233455123123122133131
+            ],
+            [
+                ['myStringValue' => 'asdasasd'],
+                'myStringValue',
+                0
+            ],
+            [
+                ['otherKey' => '11233455123123122133131'],
+                'myStringValue',
+                null
+            ],
+            [
+                ['otherKey' => '11233455123123122133131'],
+                'myStringValue',
+                '1234',
+                '1234'
+            ],
+            [
+                ['otherKey' => ['anotherKey' => '1234']],
+                'otherKey|anotherKey',
+                1234,
+                null,
+                ['separator' => '|']
+            ]
+        ];
+    }
+    
+    public function getBooleanDataProvider()
+    {
+        return [
+            [
+                ['myStringValue' => '11233455123123122133131'],
+                'myStringValue',
+                true
+            ],
+            [
+                ['myStringValue' => '0'],
+                'myStringValue',
+                false
+            ],
+            [
+                ['otherKey' => '11233455123123122133131'],
+                'myStringValue',
+                null
+            ],
+            [
+                ['otherKey' => '11233455123123122133131'],
+                'myStringValue',
+                true,
+                true
+            ],
+            [
+                ['otherKey' => ['anotherKey' => '1234']],
+                'otherKey|anotherKey',
+                true,
+                null,
+                ['separator' => '|']
+            ]
+        ];
+    }
+    
+    public function invalidCastDataProvider()
+    {
+        return [
+            [
+                ['myValue' => []],
+                'myValue',
+                'int'
+            ],
+            [
+                ['myValue' => new \DateTime()],
+                'myValue',
+                'int'
+            ],
+            [
+                ['myValue' => '123'],
+                'myValue',
+                'inasdadt'
+            ],
+        ];
+    }
+    
     // Helper methods
 
     /**

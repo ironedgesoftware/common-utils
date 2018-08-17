@@ -23,9 +23,9 @@ class CantRemoveDirectoryException extends BaseException
      *
      * @param string $msg - Exception message.
      *
-     * @return DataIsReadOnlyException
+     * @return self
      */
-    public static function create(string $msg)
+    public static function create(string $msg) : self
     {
         return new self($msg);
     }
