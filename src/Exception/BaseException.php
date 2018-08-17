@@ -16,7 +16,7 @@ namespace IronEdge\Component\CommonUtils\Exception;
 /**
  * @author Gustavo Falco <comfortablynumb84@gmail.com>
  */
-class BaseException extends \Exception
+abstract class BaseException extends \Exception
 {
 
 }

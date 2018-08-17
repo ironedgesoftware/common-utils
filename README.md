@@ -1,17 +1,25 @@
 # Common Utilities
 
 [![Build Status](https://travis-ci.org/ironedgesoftware/common-utils.svg?branch=master)](https://travis-ci.org/ironedgesoftware/common-utils)
+[![Latest Stable Version](https://poser.pugx.org/ironedge/common-utils/v/stable)](https://packagist.org/packages/ironedge/common-utils)
+[![License](https://poser.pugx.org/ironedge/common-utils/license)](https://packagist.org/packages/ironedge/common-utils)
+[![composer.lock](https://poser.pugx.org/ironedge/common-utils/composerlock)](https://packagist.org/packages/ironedge/common-utils)
 
 Common utilities, simple to integrate in any project.
 
 ## Index
 
+* [Requirements](#requirements): These are the requirements to use this component.
 * [DataTrait](#datatrait): A Trait to create your own configuration classes.
 * [Data](#data): A class using [DataTrait](#datatrait) so you can start using it right from scratch.
 * [OptionsTrait](#optionstrait): A Trait to add a simple options API to your classes.
 * [System Service](#system-service): This service provides a simple API to interact with your system, with methods to execute CLI commands, create directories, etc.
 * [Example Files](#example-files): A list of example PHP files that we provide so you can see how to use the features of this component.
 
+
+## Requirements
+
+* PHP 7.2+
 
 ## DataTrait
 
@@ -51,6 +59,7 @@ $yourClass = new YourClass();
 
 $originalData = [
     'user' => [
+        'id'        => '123456',
         'username'  => 'foo',
         'profile'   => 'custom_profile',
         'groups'    => [
@@ -68,7 +77,7 @@ $originalData = [
 
 $yourClass->setData($originalData);
 
-// Obtain user array. Result: ['username' => 'foo', 'profile' => ... ]
+// Obtain user array. Result: ['id' => '123456', 'username' => 'foo', 'profile' => ... ]
 
 $yourClass->get('user');
 
@@ -116,6 +125,26 @@ $yourClass->get('defaultUser');
 // It should return: 'all'
 
 $yourClass->get('allowedIps|127.0.0.1|grants', null, ['separator' => '|']);
+
+// ------------------
+// Get a casted value
+// ------------------
+
+// Returns an int value: 1234
+
+$yourClass->getInt('user.id');
+
+// Returns a float value: 1234
+
+$yourClass->getFloat('user.id');
+
+// Returns a string value: '1234'
+
+$yourClass->getString('user.id');
+
+// Returns a boolean value: true
+
+$yourClass->getBoolean('user.id');
 ```
 
 ## Data
@@ -314,3 +343,13 @@ php example-file.php;
 * **resources/examples/data.php**: Shows the usage of the [Data class](#data).
 * **resources/examples/options.php**: Shows the usage of the [OptionsTrait](#optionstrait).
 * **resources/examples/system-service.php**: Shows the usage of the [System Service](#system-service).
+
+## Installation
+
+Execute the following command to install this component with composer:
+
+```
+cd /path/to/your/project;
+
+composer require ironedge/common-utils;
+```

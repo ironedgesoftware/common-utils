@@ -23,6 +23,52 @@ use IronEdge\Component\CommonUtils\Test\Unit\AbstractTestCase;
 class DataTraitTest extends AbstractTestCase
 {
     /**
+     * @dataProvider getFloatDataProvider
+     */
+    public function test_getFloat_returnsCastedValue(
+        array $data,
+        string $index,
+        $expectedValue,
+        $default = null,
+        array $options = []
+    ) {
+        $config = $this->createInstance($data);
+        
+        $this->assertEquals($expectedValue, $config->getFloat($index, $default, $options));
+    }
+    
+    /**
+     * @dataProvider getIntDataProvider
+     */
+    public function test_getInt_returnsCastedValue(
+        array $data,
+        string $index,
+        $expectedValue,
+        $default = null,
+        array $options = []
+    ) {
+        $config = $this->createInstance($data);
+        
+        $this->assertEquals($expectedValue, $config->getInt($index, $default, $options));
+    }
+    
+    /**
+     * @dataProvider getCastedValueDataProvider
+     */
+    public function test_getCastedValue_returnsCastedValue(
+        array $data,
+        string $index,
+        string $expectedType,
+        $expectedValue,
+        $default = null,
+        array $options = []
+    ) {
+        $config = $this->createInstance($data);
+        
+        $this->assertEquals($expectedValue, $config->getCastedValue($expectedType, $index, $default, $options));
+    }
+    
+    /**
      * @dataProvider removeDataProvider
      */
     public function test_remove_shouldRemoveElementFromDataArray(array $data, string $removeIndex)
@@ -39,9 +85,7 @@ class DataTraitTest extends AbstractTestCase
      */
     public function test_readOnly_ifInstanceIsReadOnlyThenThrowException(\Closure $setDataClosure)
     {
-        $this->setExpectedExceptionRegExp(
-            get_class(new DataIsReadOnlyException())
-        );
+        $this->expectException(get_class(new DataIsReadOnlyException()));
 
         $config = $this->createInstance([]);
 
@@ -265,6 +309,137 @@ class DataTraitTest extends AbstractTestCase
                     $config->set('test', []);
                     $config->callFunction('array_merge', 'test', ['b' => 'c']);
                 }
+            ]
+        ];
+    }
+    
+    public function getCastedValueDataProvider()
+    {
+        return [
+            [
+                ['myStringValue' => '11112222'],
+                'myStringValue',
+                'int',
+                11112222
+            ],
+            [
+                ['myStringValue' => 'asdasasd'],
+                'myStringValue',
+                'int',
+                '0'
+            ],
+            [
+                ['myIntValue' => 11233455],
+                'myIntValue',
+                'string',
+                '11233455'
+            ],
+            [
+                ['myIntValue' => 11233455],
+                'myIntValue',
+                'boolean',
+                true
+            ],
+            [
+                ['myIntValue' => 0],
+                'myIntValue',
+                'boolean',
+                false
+            ],
+            [
+                ['myStringValue' => '11233455123123122133131'],
+                'myStringValue',
+                'float',
+                11233455123123122133131
+            ],
+            [
+                ['otherKey' => '11233455123123122133131'],
+                'myStringValue',
+                'float',
+                null
+            ],
+            [
+                ['otherKey' => '11233455123123122133131'],
+                'myStringValue',
+                'float',
+                '1234',
+                '1234'
+            ],
+            [
+                ['otherKey' => ['anotherKey' => '1234']],
+                'otherKey|anotherKey',
+                'float',
+                1234,
+                null,
+                ['separator' => '|']
+            ]
+        ];
+    }
+    
+    public function getIntDataProvider()
+    {
+        return [
+            [
+                ['myStringValue' => '11112222'],
+                'myStringValue',
+                11112222
+            ],
+            [
+                ['myStringValue' => 'asdasasd'],
+                'myStringValue',
+                '0'
+            ],
+            [
+                ['otherKey' => '11233455123123122133131'],
+                'myStringValue',
+                null
+            ],
+            [
+                ['otherKey' => '11233455123123122133131'],
+                'myStringValue',
+                '1234',
+                '1234'
+            ],
+            [
+                ['otherKey' => ['anotherKey' => '1234']],
+                'otherKey|anotherKey',
+                1234,
+                null,
+                ['separator' => '|']
+            ]
+        ];
+    }
+    
+    public function getFloatDataProvider()
+    {
+        return [
+            [
+                ['myStringValue' => '11233455123123122133131'],
+                'myStringValue',
+                11233455123123122133131
+            ],
+            [
+                ['myStringValue' => 'asdasasd'],
+                'myStringValue',
+                0
+            ],
+            [
+                ['otherKey' => '11233455123123122133131'],
+                'myStringValue',
+                null
+            ],
+            [
+                ['otherKey' => '11233455123123122133131'],
+                'myStringValue',
+                '1234',
+                '1234'
+            ],
+            [
+                ['otherKey' => ['anotherKey' => '1234']],
+                'otherKey|anotherKey',
+                1234,
+                null,
+                ['separator' => '|']
             ]
         ];
     }

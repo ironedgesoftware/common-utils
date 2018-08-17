@@ -10,11 +10,13 @@
 
 namespace IronEdge\Component\CommonUtils\Test\Unit;
 
+use PHPUnit\Framework\TestCase;
+
 
 /**
  * @author Gustavo Falco <comfortablynumb84@gmail.com>
  */
-abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
+abstract class AbstractTestCase extends TestCase
 {
 
 }

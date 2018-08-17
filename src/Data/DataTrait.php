@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace IronEdge\Component\CommonUtils\Data;
 
 use IronEdge\Component\CommonUtils\Exception\DataIsReadOnlyException;
+use IronEdge\Component\CommonUtils\Exception\InvalidCastException;
 use IronEdge\Component\CommonUtils\Options\OptionsTrait;
 
 
@@ -46,7 +47,7 @@ trait DataTrait
      *
      * @return self
      */
-    public function setReadOnly(bool $bool)
+    public function setReadOnly(bool $bool) : self
     {
         $this->_readOnly = $bool;
 
@@ -69,9 +70,11 @@ trait DataTrait
      * @param array $data                     - data.
      * @param bool  $replaceTemplateVariables - Replace template variables?
      *
+     * @throws DataIsReadOnlyException - If data is on read-only status.
+     *
      * @return $this
      */
-    public function setData(array $data, $replaceTemplateVariables = true)
+    public function setData(array $data, $replaceTemplateVariables = true) : self
     {
         $this->assertDataIsWritable();
 
@@ -98,6 +101,8 @@ trait DataTrait
      * Replaces the data with the template variables configured on this instance.
      *
      * @param string|array $data - Data.
+     *
+     * @throws DataIsReadOnlyException - If data is on read-only status.
      *
      * @return string|array
      */
@@ -158,6 +163,99 @@ trait DataTrait
 
         return $value;
     }
+    
+    /**
+     * Returns value from $index casted to $targetType.
+     *
+     * @param string $targetType - Target type. This must be a scalar type.
+     * @param string $index      - Index to search for.
+     * @param mixed  $default    - Default.
+     * @param array  $options    - Options.
+     *
+     * @throws InvalidCastException - If cast cannot be made.
+     *
+     * @return mixed
+     */
+    public function getCastedValue(string $targetType, string $index, $default = null, array $options = [])
+    {
+        $val = $this->get($index, $default, $options);
+        
+        if ($val === null) {
+            return null;
+        }
+
+        $actualType = gettype($val);
+        
+        if (!is_scalar($val) || !settype($val, $targetType)) {
+            throw InvalidCastException::create($actualType, $targetType);
+        }
+        
+        return $val;
+    }
+    
+    /**
+     * Returns value of $index casted to int if !== null. Returns null otherwise.
+     *
+     * @param string $index   - Index to search for.
+     * @param mixed  $default - Default.
+     * @param array  $options - Options.
+     *
+     * @throws InvalidCastException
+     *
+     * @return int|null
+     */
+    public function getInt(string $index, $default = null, array $options = []) : ?int
+    {
+        return $this->getCastedValue('int', $index, $default, $options);
+    }
+    
+    /**
+     * Returns value of $index casted to float if !== null. Returns null otherwise.
+     *
+     * @param string $index   - Index to search for.
+     * @param mixed  $default - Default.
+     * @param array  $options - Options.
+     *
+     * @throws InvalidCastException
+     *
+     * @return float|null
+     */
+    public function getFloat(string $index, $default = null, array $options = []) : ?float
+    {
+        return $this->getCastedValue('float', $index, $default, $options);
+    }
+    
+    /**
+     * Returns value of $index casted to string if !== null. Returns null otherwise.
+     *
+     * @param string $index   - Index to search for.
+     * @param mixed  $default - Default.
+     * @param array  $options - Options.
+     *
+     * @throws InvalidCastException
+     *
+     * @return string|null
+     */
+    public function getString(string $index, $default = null, array $options = []) : ?string
+    {
+        return $this->getCastedValue('string', $index, $default, $options);
+    }
+    
+    /**
+     * Returns value of $index casted to boolean if !== null. Returns null otherwise.
+     *
+     * @param string $index   - Index to search for.
+     * @param mixed  $default - Default.
+     * @param array  $options - Options.
+     *
+     * @throws InvalidCastException
+     *
+     * @return bool|null
+     */
+    public function getBoolean(string $index, $default = null, array $options = []) : ?bool
+    {
+        return $this->getCastedValue('bool', $index, $default, $options);
+    }
 
     /**
      * Returns true if the parameter exists or false otherwise.
@@ -167,7 +265,7 @@ trait DataTrait
      *
      * @return bool
      */
-    public function has(string $index, array $options = []): bool
+    public function has(string $index, array $options = []) : bool
     {
         $separator = isset($options['separator']) ?
             $options['separator'] :
@@ -198,9 +296,11 @@ trait DataTrait
      * @param mixed  $value   - Parameter value.
      * @param array  $options - Options.
      *
+     * @throws DataIsReadOnlyException - If data is on read-only status.
+     *
      * @return $this
      */
-    public function set(string $index, $value, array $options = [])
+    public function set(string $index, $value, array $options = []) : self
     {
         $this->assertDataIsWritable();
 
@@ -237,9 +337,11 @@ trait DataTrait
      * @param string $index   - Parameter index.
      * @param array  $options - Options.
      *
+     * @throws DataIsReadOnlyException - If data is on read-only status.
+     *
      * @return self
      */
-    public function remove(string $index, array $options = [])
+    public function remove(string $index, array $options = []) : self
     {
         $this->assertDataIsWritable();
 
@@ -277,9 +379,11 @@ trait DataTrait
      * @param mixed  $default - Default value.
      * @param array  $options - Options.
      *
+     * @throws DataIsReadOnlyException - If data is on read-only status.
+     *
      * @return $this
      */
-    public function replaceRecursive(string $index, array $value, $default = null, array $options = [])
+    public function replaceRecursive(string $index, array $value, $default = null, array $options = []) : self
     {
         $this->assertDataIsWritable();
 
@@ -294,9 +398,11 @@ trait DataTrait
      * @param mixed  $default - Default value.
      * @param array  $options - Options.
      *
+     * @throws DataIsReadOnlyException - If data is on read-only status.
+     *
      * @return $this
      */
-    public function mergeRecursive(string $index, array $value, $default = null, array $options = [])
+    public function mergeRecursive(string $index, array $value, $default = null, array $options = []) : self
     {
         $this->assertDataIsWritable();
 
@@ -311,9 +417,11 @@ trait DataTrait
      * @param mixed  $default - Default value.
      * @param array  $options - Options.
      *
+     * @throws DataIsReadOnlyException - If data is on read-only status.
+     *
      * @return $this
      */
-    public function replace(string $index, array $value, $default = null, array $options = [])
+    public function replace(string $index, array $value, $default = null, array $options = []) : self
     {
         $this->assertDataIsWritable();
 
@@ -328,9 +436,11 @@ trait DataTrait
      * @param mixed  $default - Default value.
      * @param array  $options - Options.
      *
+     * @throws DataIsReadOnlyException - If data is on read-only status.
+     *
      * @return $this
      */
-    public function merge(string $index, array $value, $default = null, array $options = [])
+    public function merge(string $index, array $value, $default = null, array $options = []) : self
     {
         $this->assertDataIsWritable();
 
@@ -347,6 +457,8 @@ trait DataTrait
      * @param mixed  $default  - Default value.
      * @param array  $options  - Options.
      *
+     * @throws DataIsReadOnlyException - If data is on read-only status.
+     *
      * @return $this
      */
     public function callFunction(
@@ -355,7 +467,7 @@ trait DataTrait
         array $value,
         $default = null,
         array $options = []
-    ) {
+    ) : self {
         if (!function_exists($function)) {
             throw new \RuntimeException('Function "'.$function.'" does not exist!');
         }

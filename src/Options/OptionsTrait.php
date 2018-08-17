@@ -31,7 +31,7 @@ trait OptionsTrait
      *
      * @return array
      */
-    public function getOptions(): array
+    public function getOptions() : array
     {
         return $this->_options;
     }
@@ -43,7 +43,7 @@ trait OptionsTrait
      *
      * @return $this
      */
-    public function setOptions(array $options)
+    public function setOptions(array $options) : self
     {
         $this->_options = array_replace_recursive($this->getDefaultOptions(), $options);
 
@@ -58,7 +58,7 @@ trait OptionsTrait
      *
      * @return $this
      */
-    public function setOption(string $name, $value)
+    public function setOption(string $name, $value) : self
     {
         $this->_options[$name] = $value;
 
@@ -89,7 +89,7 @@ trait OptionsTrait
      *
      * @return bool
      */
-    public function hasOption(string $name): bool
+    public function hasOption(string $name) : bool
     {
         return isset($this->_options[$name]);
     }
@@ -99,5 +99,5 @@ trait OptionsTrait
      *
      * @return array
      */
-    abstract public function getDefaultOptions(): array;
+    abstract public function getDefaultOptions() : array;
 }

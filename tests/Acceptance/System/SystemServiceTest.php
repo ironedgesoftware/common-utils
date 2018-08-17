@@ -137,8 +137,7 @@ class SystemServiceTest extends AbstractTestCase
         $tmpDir = $this->getTmpDir();
         $file = $tmpDir.'/test';
 
-        $this->setExpectedExceptionRegExp(
-            get_class(new NotADirectoryException()),
+        $this->expectExceptionMessageRegExp(
             '#Can\\\'t create directory \"'.preg_quote($file).
             '\" because it exists and it\\\'s not a directory\.#'
         );
@@ -155,8 +154,7 @@ class SystemServiceTest extends AbstractTestCase
         $tmpDir = $this->getTmpDir();
         $file = $tmpDir.'/test';
 
-        $this->setExpectedExceptionRegExp(
-            get_class(new \TypeError()),
+        $this->expectExceptionMessageRegExp(
             '#mkdir\(\) expects parameter 4 to be resource, string given#'
         );
 
@@ -189,8 +187,7 @@ class SystemServiceTest extends AbstractTestCase
     {
         $dir = $this->getTmpDir().'/test';
 
-        $this->setExpectedExceptionRegExp(
-            get_class(new CantRemoveDirectoryException()),
+        $this->expectExceptionMessageRegExp(
             '#\"'.preg_quote($dir).'\" is a directory\. If you really want to remove it, ' .
             'set the \"force\" option to \"true\"\.#'
         );
@@ -206,8 +203,7 @@ class SystemServiceTest extends AbstractTestCase
     {
         $dir = $this->getTmpDir().'/test/dir';
 
-        $this->setExpectedExceptionRegExp(
-            get_class(new IOException()),
+        $this->expectExceptionMessageRegExp(
             '#Couldn\\\'t remove directory \"'.preg_quote(dirname($dir)).'\"\. Last PHP Error\:#'
         );
 
@@ -253,10 +249,7 @@ class SystemServiceTest extends AbstractTestCase
 
     public function test_rm_ifContextIsInvalidThenThrowException()
     {
-        $this->setExpectedExceptionRegExp(
-            get_class(new \TypeError()),
-            '#unlink\(\) expects parameter 2 to be resource, string given#'
-        );
+        $this->expectExceptionMessageRegExp('#unlink\(\) expects parameter 2 to be resource, string given#');
 
         $file = $this->getTmpDir().'/test_file';
 
@@ -273,8 +266,7 @@ class SystemServiceTest extends AbstractTestCase
         $badTarget = '/asdasd/ASdasdas7dasdas/Das';
         @symlink($badTarget, $testSymlink);
 
-        $this->setExpectedExceptionRegExp(
-            get_class(new IOException()),
+        $this->expectExceptionMessageRegExp(
             '#Couldn\\\'t scan directory "'.$badTarget.'"\. Last PHP Error#'
         );
 
@@ -352,16 +344,14 @@ class SystemServiceTest extends AbstractTestCase
 
     public function test_scandir_ifContextIsInvalidThenThrowException()
     {
-        $this->setExpectedExceptionRegExp(
-            get_class(new \TypeError())
-        );
+        $this->expectException(get_class(new \TypeError()));
 
         $this->createInstance()->scandir($this->getTmpDir(), ['context' => 'invalidContext']);
     }
 
     public function test_mkdir_throwExceptionIfFunctionReturnFalse()
     {
-        $this->setExpectedExceptionRegExp(
+        $this->expectException(
             get_class(new IOException())
         );
 
@@ -370,7 +360,7 @@ class SystemServiceTest extends AbstractTestCase
 
     public function test_rmdir_throwExceptionIfFunctionReturnFalse()
     {
-        $this->setExpectedExceptionRegExp(
+        $this->expectException(
             get_class(new IOException())
         );
 
