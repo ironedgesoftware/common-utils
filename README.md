@@ -1,6 +1,7 @@
 # Common Utilities
 
 [![Build Status](https://travis-ci.org/ironedgesoftware/common-utils.svg?branch=master)](https://travis-ci.org/ironedgesoftware/common-utils)
+[![Coverage Status](https://coveralls.io/repos/github/ironedgesoftware/common-utils/badge.svg?branch=master)](https://coveralls.io/github/ironedgesoftware/common-utils?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/ironedge/common-utils/v/stable)](https://packagist.org/packages/ironedge/common-utils)
 [![License](https://poser.pugx.org/ironedge/common-utils/license)](https://packagist.org/packages/ironedge/common-utils)
 [![composer.lock](https://poser.pugx.org/ironedge/common-utils/composerlock)](https://packagist.org/packages/ironedge/common-utils)
