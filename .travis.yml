@@ -1,14 +1,20 @@
 language: php
+sudo: false
 php:
   - '7.2'
   - nightly
 install:
   - composer install
+  - wget https://github.com/satooshi/php-coveralls/releases/download/v1.0.0/coveralls.phar
+
+before_script:
+  - mkdir -p build/logs
 
 script:
-  - mkdir -p build/logs
-  - php vendor/bin/phpunit -c phpunit.xml.dist
+  - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 
-after_success:
-  # or enable logging
-  - travis_retry php vendor/bin/php-coveralls -v
+after_script:
+  - php coveralls.phar -v
+
+notifications:
+    email: false
